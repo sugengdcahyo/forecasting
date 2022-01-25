@@ -31,9 +31,16 @@ class PredictViewsets(generics.CreateAPIView, viewsets.GenericViewSet):
         datatest_scaled = scaled.fit_transform(datatest)
         
         X_test, y_test = self.sliding_window(data=np.array(datatest_scaled), window=9, step_size=1)
-        print(X_test.shape)
+        model = request.data['model']
+        print(os.getcwd()) 
+        if model == 'usd-idr':
+            model_selected = os.path(
+                f"{os.getcwd()}/labs/design/models/usd")
+        else:
+            model_selected = os.path(f"{os.getcwd()}/labs/design/models/jpy")
+
         return Response({
-            'X_test': X_test, 'y_test': y_test})
+            'X_test': X_test.shape, 'y_test': y_test.shape, 'model': model_selected})
 
         model = request.data['model']
         model_selected = os.path(f'labs/design/models/usd/{model}')
