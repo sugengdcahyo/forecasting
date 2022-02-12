@@ -8,6 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 import numpy as np
 import os
+import random
 
 class PredictViewsets(generics.CreateAPIView, viewsets.GenericViewSet):
 
@@ -22,6 +23,12 @@ class PredictViewsets(generics.CreateAPIView, viewsets.GenericViewSet):
         return X_test, y_test
 
     def create(self, request, *args, **kwargs):
+        predicted = []
+        for i in range(100):
+            predicted.append({"time":i, "value": random.randint(800, 3000)})
+
+        return Response(predicted, status=status.HTTP_200_OK)
+        
         datatest = request.data['datatest']
         scaled = MinMaxScaler(feature_range=(-1, 1))
         
