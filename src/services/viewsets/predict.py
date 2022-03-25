@@ -22,7 +22,29 @@ class PredictViewsets(generics.CreateAPIView, viewsets.GenericViewSet):
         X_test, y_test = np.array(X_test), np.array(y_test)
         return X_test, y_test
 
+    def validate(self, data):
+
+        if 'histories' not in data:
+            if type(data['histories']) is not type(list()):
+                raise BaseException("Histories only array data")
+            raise BaseException("Histories is required")
+        elif 'model' not in data:
+            raise BaseException("Model is required")
+
+        elif 'range' not in data:
+            if type(int(data['range'])) is not type(int()):
+                assert BaseException("Range must integer")
+            raise BaseException("Range is required")
+
+        return data
+
     def create(self, request, *args, **kwargs):
+        data = request.data
+        try:
+            validate = self.validate(data)
+        except BaseException as e:
+            return Response({'message': str(e)}, status=400)
+        
         predicted = []
         for i in range(int(request.data['range'])):
             predicted.append({"time":i, "value": random.randint(800, 3000)})
